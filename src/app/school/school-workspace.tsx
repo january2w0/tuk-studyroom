@@ -350,7 +350,7 @@ async function call(url: string, init?: RequestInit) {
 }
 
 const labels: Record<string, string> = {
-  draft: "임시 저장 · 학교 미신청",
+  draft: "임시 저장",
   confirmed: "학교 접수 확인",
   submitted: "학교 신청 확인 · 승인 대기",
   saved: "학교 임시저장 · 아직 신청되지 않음",
