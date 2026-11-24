@@ -1,0 +1,45 @@
+/* Trading Dashboard's surface/boundary/interaction roles, with Sai's existing light palette. */
+:root {
+  color-scheme: light;
+  --background: #f6f7f3;
+  --foreground: #172b31;
+  --card: #ffffff;
+  --card-foreground: var(--foreground);
+  --popover: #ffffff;
+  --popover-foreground: var(--foreground);
+  --primary: #244c43;
+  --primary-foreground: #ffffff;
+  --secondary: #eef2ed;
+  --secondary-foreground: var(--foreground);
+  --muted: #f2f4ef;
+  --muted-foreground: #63716e;
+  --accent: #eef2ed;
+  --accent-foreground: #244c43;
+  --destructive: #a53021;
+  --destructive-foreground: #ffffff;
+  --border: #dfe5df;
+  --input: #d7dfd8;
+  --ring: #718e7e;
+  --radius: 0.5rem;
+  --surface-canvas: var(--background);
+  --surface-panel: var(--card);
+  --surface-section: #f8f9f6;
+  --surface-control: #fafbf8;
+  --surface-raised: #eef2ed;
+  --ambient-green: #c3dcce;
+  --ambient-cream: #efdfc1;
+  --boundary-default: var(--border);
+  --boundary-strong: #a9b9ad;
+  --boundary-focus: #718e7e;
+  --interface-primary: var(--foreground);
+  --interface-secondary: var(--muted-foreground);
+  --interface-muted: #78857e;
+  --interaction-button-hover: #e8eee7;
+  --interaction-selected: #e8eee7;
+  --signal-success: #215b43;
+  --signal-warning: #79663e;
+  --elevation-overlay:
+    0 4px 8px -4px rgb(23 43 49 / 0.08), 0 16px 24px -8px rgb(23 43 49 / 0.12);
+  --motion-control: 150ms;
+  --motion-panel: 200ms;
+}

@@ -1,0 +1,64 @@
+/* Selected roles from trading-dashboard/frontend/src/styles/typography.css. */
+@utility type-display-md {
+  font-size: clamp(26px, 3vw, 32px);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 1.2;
+}
+@utility type-room-sign {
+  font-size: 36px;
+  font-weight: 400;
+  letter-spacing: -0.06em;
+  line-height: 40px;
+  font-variant-numeric: tabular-nums;
+}
+@utility type-building-sign {
+  font-size: 84px;
+  font-weight: 400;
+  letter-spacing: -0.07em;
+  line-height: 84px;
+  font-variant-numeric: tabular-nums;
+}
+@utility type-heading-lg {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 28px;
+}
+@utility type-heading-md {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 24px;
+}
+@utility type-heading-sm {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 20px;
+}
+@utility type-body-md {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 20px;
+}
+@utility type-body-sm {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+}
+@utility type-body-xs {
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 20px;
+}
+@utility type-label-md {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+}
+@utility type-label-sm {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+}

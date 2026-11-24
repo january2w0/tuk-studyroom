@@ -1,0 +1,203 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "@fontsource-variable/geist";
+@import "@fontsource/noto-sans-kr/400.css";
+@import "@fontsource/noto-sans-kr/500.css";
+@import "@fontsource/noto-sans-kr/600.css";
+@import "../styles/typography.css";
+@import "../styles/tokens.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Reserve scrollbar space inside the page while a Radix modal is open. */
+@supports (scrollbar-gutter: stable) {
+  html:not(:has(.school-shell)):has(> body[data-scroll-locked]) {
+    overflow: hidden;
+    scrollbar-gutter: auto;
+  }
+  html body[data-scroll-locked]:not(:has(.school-shell)) {
+    margin-right: 0 !important;
+    scrollbar-gutter: stable;
+  }
+}
+
+@theme inline {
+  --font-sans: "Geist Variable", "Noto Sans KR", sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-surface-canvas: var(--surface-canvas);
+  --color-surface-panel: var(--surface-panel);
+  --color-surface-section: var(--surface-section);
+  --color-surface-control: var(--surface-control);
+  --color-surface-raised: var(--surface-raised);
+  --color-boundary-default: var(--boundary-default);
+  --color-boundary-strong: var(--boundary-strong);
+  --color-boundary-focus: var(--boundary-focus);
+  --color-interface-primary: var(--interface-primary);
+  --color-interface-secondary: var(--interface-secondary);
+  --color-interface-muted: var(--interface-muted);
+  --color-interaction-button-hover: var(--interaction-button-hover);
+  --color-interaction-selected: var(--interaction-selected);
+  --color-signal-success: var(--signal-success);
+  --color-signal-warning: var(--signal-warning);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --shadow-overlay: var(--elevation-overlay);
+}
+
+@layer base {
+  html {
+    scrollbar-gutter: stable;
+  }
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply m-0 bg-background font-sans type-body-md text-foreground antialiased;
+  }
+  :is(button, select, input[type="checkbox"], input[type="radio"]):enabled:not([aria-disabled="true"]),
+  :is(a:any-link, summary):not([aria-disabled="true"]),
+  :is([role="button"], [role="menuitem"], [role="option"]):not(:disabled, [aria-disabled="true"], [data-disabled]),
+  [data-slot="field"]:has(> [role="checkbox"]:enabled) label {
+    cursor: pointer;
+  }
+  a,
+  button,
+  input,
+  textarea,
+  select {
+    -webkit-tap-highlight-color: transparent;
+  }
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+  h1,
+  h2,
+  h3,
+  p {
+    overflow-wrap: anywhere;
+  }
+  input[type="number"] {
+    font-variant-numeric: tabular-nums;
+  }
+  textarea {
+    resize: vertical;
+  }
+}
+
+@utility focus-control {
+  outline: none;
+  &:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+}
+@utility page-container {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+@media (max-width: 640px) {
+  .page-container {
+    padding-inline: 16px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+html:has(.school-shell) {
+  scrollbar-gutter: auto;
+}
+
+/* Keep the page scrollbar while a select is open outside a modal. */
+html:has(.school-shell):has([data-slot="select-content"]):not(:has([data-slot="sheet-overlay"], [data-slot="alert-dialog-overlay"])) {
+  overflow-y: auto;
+
+  > body[data-scroll-locked] {
+    margin-right: 0 !important;
+    --removed-body-scroll-bar-size: 0px;
+  }
+}
+
+.school-shell {
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+}
+body[data-scroll-locked] .school-shell > header {
+  margin-right: calc(-1 * var(--removed-body-scroll-bar-size, 0px));
+  padding-right: var(--removed-body-scroll-bar-size, 0px);
+}
+.school-atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--background);
+}
+.school-atmosphere::before,
+.school-atmosphere::after {
+  content: "";
+  position: absolute;
+  inset: -35%;
+  background: radial-gradient(
+    ellipse at 71% 28%,
+    var(--ambient-green),
+    transparent 56%
+  );
+  animation: atmosphere-drift 8s ease-in-out -3s infinite alternate;
+}
+.school-atmosphere::after {
+  background: radial-gradient(
+    ellipse at 29% 72%,
+    var(--ambient-cream),
+    transparent 52%
+  );
+  animation-duration: 11s;
+  animation-delay: -5s;
+  animation-direction: alternate-reverse;
+}
+@keyframes atmosphere-drift {
+  from {
+    transform: translate3d(-17%, -11%, 0);
+  }
+  to {
+    transform: translate3d(17%, 11%, 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .school-atmosphere::before,
+  .school-atmosphere::after {
+    animation: none !important;
+  }
+}
