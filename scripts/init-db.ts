@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import mysql from "mysql2/promise";
 import { hashPassword } from "../src/lib/password";
+import { databaseOptions } from "../src/lib/db-config";
 import { decryptSchoolState, encryptSchoolState } from "../src/lib/school/crypto";
 import type { BookingForm } from "../src/lib/school/booking-records";
 
@@ -63,11 +64,7 @@ async function main() {
   if (!process.env.STUDENT_PASSWORD || !process.env.ADMIN_PASSWORD)
     throw new Error("앱 전용 초기 암호를 설정해주세요.");
   const conn = await mysql.createConnection({
-    host: process.env.DB_HOST ?? "127.0.0.1",
-    port: Number(process.env.DB_PORT ?? 3308),
-    user: process.env.DB_USER ?? "meeting_app",
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.DB_NAME ?? "tuk_meeting_room",
+    ...databaseOptions,
     multipleStatements: true,
   });
   try {

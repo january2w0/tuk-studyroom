@@ -1,16 +1,17 @@
 import "server-only";
 import mysql from "mysql2/promise";
+import { databaseOptions } from "./db-config";
 
 const globalDb = globalThis as unknown as { meetingPool?: mysql.Pool };
+const connectionLimit = Number(process.env.DB_CONNECTION_LIMIT ?? 5);
+if (!Number.isInteger(connectionLimit) || connectionLimit < 1) {
+  throw new Error("DB_CONNECTION_LIMIT must be a positive integer.");
+}
 export const db =
   globalDb.meetingPool ??
   mysql.createPool({
-    host: process.env.DB_HOST ?? "127.0.0.1",
-    port: Number(process.env.DB_PORT ?? 3308),
-    user: process.env.DB_USER ?? "meeting_app",
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.DB_NAME ?? "tuk_meeting_room",
-    connectionLimit: 5,
+    ...databaseOptions,
+    connectionLimit,
     dateStrings: true,
     timezone: "+09:00",
   });
