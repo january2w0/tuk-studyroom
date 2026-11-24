@@ -153,6 +153,7 @@ test("expanded rooms reuse school lookup, submission and booking history", async
   const rooms: SchoolRow[] = [
     { strctrNm: "공학관 E동", reserInstNm: "SW스터디룸-1(113-1)", roomNo: "113-1", deptChk: "Y" },
     { strctrNm: "기술혁신파크", reserInstNm: "창업동아리회의실2(312-2)", roomNo: "312-2", acceptRcnt: "" },
+    { strctrNm: "제2생활관", reserInstNm: "PBL강의실", roomNo: "208", acceptRcnt: "40" },
   ];
   const lookup = fixture({
     otherRooms: [
@@ -160,10 +161,12 @@ test("expanded rooms reuse school lookup, submission and booking history", async
       { strctrNm: "기술혁신파크", reserInstNm: "GX_Room", roomNo: "602" },
       { strctrNm: "다른 건물", roomNo: "113-1" },
       { strctrNm: "공학관 E동", roomNo: "113-12" },
+      { strctrNm: "제2생활관", reserInstNm: "PBL강의실", roomNo: "209" },
+      { strctrNm: "제2생활관", reserInstNm: "이러닝스튜디오", roomNo: "209" },
     ],
   });
   const results = await lookup.api.rooms(input);
-  assert.deepEqual(results.map(({ area }) => area), ["dorm", "engineering", "tip"]);
+  assert.deepEqual(results.map(({ area }) => area), ["dorm", "engineering", "tip", "pbl"]);
   for (const { roomNo, ...facility } of rooms) {
     const f = fixture({ facility, pending: true });
     const saved = await f.api.submit({ ...input, attendees: 3 }, async () => {});

@@ -375,7 +375,7 @@ const startTimeOptions = timeOptions.slice(0, -1);
 const areaOptions = Object.entries(roomAreas).map(([value, { label }]) => ({ value, label }));
 const roomSign = (room?: Room) =>
   (room?.number.match(/-(\d+)$/)?.[1] ?? room?.name.match(/미팅룸[-\s]*(\d+)/)?.[1])
-    ?.padStart(2, "0") || "—";
+    ?.padStart(2, "0") || (room?.area === "pbl" ? room.number : "—");
 const roomTitle = (name: string) =>
   name.replace(/\s*\([^)]*\)$/, "").replace(/(미팅룸|스터디룸|회의실)-?(?=\d)/, "$1 ");
 export default function SchoolWorkspace({
@@ -575,7 +575,7 @@ export default function SchoolWorkspace({
                 {roomAreas[area].number}<span className="ml-1 type-body-sm md:hidden">호</span>
               </p>
               <div className="flex flex-col gap-1 md:mt-4">
-                <p className="type-label-md">{roomAreas[area].label}</p>
+                <p className="type-heading-sm md:text-base">{roomAreas[area].label}</p>
               </div>
             </div>
             <form
@@ -786,7 +786,7 @@ export default function SchoolWorkspace({
                       >
                         <span
                           aria-hidden="true"
-                          className="type-room-sign text-primary"
+                          className={`text-primary ${room.area === "pbl" ? "text-2xl leading-10 tracking-tight tabular-nums" : "type-room-sign"}`}
                         >
                           {roomSign(room)}
                         </span>

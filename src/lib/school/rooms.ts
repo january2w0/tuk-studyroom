@@ -2,6 +2,7 @@ import type { SchoolRow } from "./xml";
 
 export const roomAreas = {
   dorm: { label: "제2생활관", number: "207", minAttendees: 1 },
+  pbl: { label: "제2생활관 PBL강의실", number: "208", minAttendees: 1 },
   engineering: { label: "공학관 E동", number: "113", minAttendees: 3 },
   tip: { label: "TIP 3층", number: "312", minAttendees: 1 },
 };
@@ -18,8 +19,13 @@ export function schoolRoom(
   const space = (row.eduSpaceNmV || row.eduSpaceNm || "").trim();
   const number = row.roomNo?.trim();
 
-  if (building?.includes("제2생활관") && /미팅룸|그룹활동실/.test(`${name} ${space}`)) {
-    return { area: "dorm", number: number || space };
+  if (building?.includes("제2생활관")) {
+    if (/^PBL\s*강의실$/i.test(name) && (!number || /^208(?:호)?$/.test(number))) {
+      return { area: "pbl", number: roomAreas.pbl.number };
+    }
+    if (/미팅룸|그룹활동실/.test(`${name} ${space}`)) {
+      return { area: "dorm", number: number || space };
+    }
   }
 
   if (building === "공학관 E동") {

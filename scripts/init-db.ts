@@ -4,6 +4,7 @@ import { hashPassword } from "../src/lib/password";
 import { databaseOptions } from "../src/lib/db-config";
 import { decryptSchoolState, encryptSchoolState } from "../src/lib/school/crypto";
 import type { BookingForm } from "../src/lib/school/booking-records";
+import { roomAreas } from "../src/lib/school/rooms";
 
 async function migrateBookingSchedule(conn: mysql.Connection) {
   const [columns] = await conn.query<mysql.RowDataPacket[]>(
@@ -76,8 +77,8 @@ async function main() {
     if (!areaColumns.length)
       await conn.query("ALTER TABLE rooms ADD COLUMN school_area VARCHAR(24) UNIQUE AFTER location");
     await conn.query(
-      `INSERT IGNORE INTO rooms(name,location,school_area) VALUES
-        ('제2생활관','207호','dorm'),('공학관 E동','113호','engineering'),('TIP 3층','312호','tip')`,
+      "INSERT IGNORE INTO rooms(name,location,school_area) VALUES ?",
+      [Object.entries(roomAreas).map(([area, { label, number }]) => [label, number + "호", area])],
     );
     for (const [username, displayName, password, role] of [
       ["student", "학생", process.env.STUDENT_PASSWORD, "student"],
