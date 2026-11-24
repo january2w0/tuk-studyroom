@@ -61,10 +61,7 @@ export function FormSelect({
           {options.find((option) => option.value === selected)?.label}
         </SelectValue>
       </SelectTrigger>
-      <SelectContent
-        position="popper"
-        className="max-w-[var(--radix-select-trigger-width)]"
-      >
+      <SelectContent position="popper" align="start">
         <SelectGroup>
           {options.map((o) => (
             <SelectItem key={o.value} value={o.value}>
