@@ -943,7 +943,7 @@ export default function SchoolWorkspace({
                                   {item.status === "draft" ? "이어서 신청" : "다시 신청"}
                                 </Button>
                               </PopoverTrigger>
-                              <PopoverContent align="end" collisionPadding={12} className="max-h-[var(--radix-popover-content-available-height)] w-auto overflow-y-auto p-0" aria-label="재신청 날짜 선택">
+                              <PopoverContent align="end" collisionPadding={12} className="max-h-[var(--radix-popover-content-available-height)] w-min max-w-[var(--radix-popover-content-available-width)] overflow-y-auto p-0" aria-label="재신청 날짜 선택">
                                 <div className="border-b px-4 py-3">
                                   <p className="type-label-md">이용 날짜 선택</p>
                                   <p className="type-body-sm text-muted-foreground">
@@ -1022,7 +1022,7 @@ export default function SchoolWorkspace({
         }}
       >
         <SheetContent
-          className="w-full gap-0 sm:max-w-xl"
+          className="w-full gap-0 border-l-0 sm:max-w-xl sm:border-l"
           onCloseAutoFocus={(event) => {
             event.preventDefault();
             (roomButtonRef.current ?? document.getElementById("school-date"))?.focus();

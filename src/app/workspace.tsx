@@ -152,13 +152,13 @@ export default function Workspace({
             </div>
             <form
               key={JSON.stringify(filters)}
-              className="grid grid-cols-2 items-end gap-3 border-b px-4 py-4 sm:px-5 lg:grid-cols-[minmax(0,1fr)_11rem_auto]"
+              className="grid items-end gap-3 border-b px-4 py-4 min-[380px]:grid-cols-[minmax(0,1fr)_auto] sm:px-5 lg:grid-cols-[minmax(0,1fr)_11rem_auto]"
               action="/"
               method="get"
               aria-label="임시 저장 내역 검색"
             >
               <input type="hidden" name="view" value="drafts" />
-              <Field className="col-span-2 min-w-0 lg:col-span-1">
+              <Field className="min-w-0 min-[380px]:col-span-2 lg:col-span-1">
                 <FieldLabel htmlFor="search-q">행사명·사용 목적·공간명</FieldLabel>
                 <Input id="search-q" type="search" name="q" defaultValue={filters.q} maxLength={200} placeholder="검색어 입력" />
               </Field>
@@ -166,7 +166,7 @@ export default function Workspace({
                 <FieldLabel htmlFor="search-date">사용 날짜</FieldLabel>
                 <DatePicker id="search-date" name="date" defaultValue={filters.date} clearable />
               </Field>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex justify-end gap-2">
                 <Button type="submit"><SearchIcon data-icon="inline-start" />검색</Button>
                 <Button variant="outline" asChild><Link href="/?view=drafts">초기화</Link></Button>
               </div>

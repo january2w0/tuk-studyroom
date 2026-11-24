@@ -148,8 +148,8 @@ function position(layout: Layout, table: Table, size: string) {
 function ColumnDetails({ table, columns, uniqueKeys }: { table: Table; columns: SchemaColumn[]; uniqueKeys: UniqueKey[] }) {
   const compositeKeys = uniqueKeys.filter((key) => key.columns.includes(","));
   return (
-    <SheetContent className="w-full gap-0 sm:max-w-lg">
-      <SheetHeader className="border-b px-5 py-4 pr-16 sm:px-6">
+    <SheetContent className="w-full gap-0 border-l-0 sm:max-w-lg sm:border-l">
+      <SheetHeader className="border-b px-4 py-4 pr-16 sm:px-6">
         <SheetTitle>{tableLabels[table]}</SheetTitle>
         <SheetDescription className="font-mono">{table}</SheetDescription>
       </SheetHeader>
@@ -201,7 +201,7 @@ function ColumnDetails({ table, columns, uniqueKeys }: { table: Table; columns: 
 
 export function ReservationErd({ columns, uniqueKeys }: { columns: SchemaColumn[]; uniqueKeys: UniqueKey[] }) {
   return (
-    <figure aria-label="교내 공간 예약 ERD" className="@container bg-surface-section px-3 py-5 sm:p-6">
+    <figure aria-label="교내 공간 예약 ERD" className="@container bg-surface-section px-4 py-5 sm:p-6">
       <div className="relative mx-auto h-[32.8125rem] max-w-[30rem] @min-[50rem]:h-[19.375rem] @min-[50rem]:max-w-none">
         <Connections layout={wide} columns={columns} uniqueKeys={uniqueKeys} className="hidden @min-[50rem]:block" />
         <Connections layout={narrow} columns={columns} uniqueKeys={uniqueKeys} className="@min-[50rem]:hidden" />
