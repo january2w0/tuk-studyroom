@@ -326,7 +326,7 @@ type Booking = {
 type RequestState = { id: number; external_id: string | null; status: string };
 type History = { bookings: Booking[]; requests: RequestState[] };
 const historyRowLayout =
-  "grid grid-cols-[3rem_minmax(0,1fr)] items-center gap-x-3 gap-y-2 px-4 py-3.5 sm:grid-cols-[3.25rem_minmax(0,1fr)_6.25rem_7rem_6.5rem] sm:gap-x-4 sm:px-5";
+  "grid grid-cols-[3rem_minmax(0,1fr)] items-center gap-x-3 gap-y-2 px-4 py-3.5 sm:grid-cols-[3.25rem_minmax(0,1fr)_6.25rem_6rem_8rem] sm:gap-x-4 sm:px-5";
 
 class SchoolRequestError extends Error {
   constructor(
@@ -421,6 +421,7 @@ export default function SchoolWorkspace({
   const [historyDate, setHistoryDate] = useState("");
   const [appliedDate, setAppliedDate] = useState("");
   const [history, setHistory] = useState<History | null>(null);
+  const [deletedDraftIds, setDeletedDraftIds] = useState<number[]>([]);
   const [historySynced, setHistorySynced] = useState(false);
   const initialSync = view === "history" && schoolConnected && !historySynced;
   const initialHistoryRequest = useRef<Promise<History> | null>(null);
@@ -443,6 +444,7 @@ export default function SchoolWorkspace({
     title: string;
     description: string;
     action: string;
+    destructive?: boolean;
     run: () => Promise<void>;
   } | null>(null);
   const requestRef = useRef<{ payload: string; key: string } | null>(null);
@@ -522,7 +524,7 @@ export default function SchoolWorkspace({
   const schoolById = new Map(schoolBookings.map((booking) => [booking.id, booking]));
   const recordedIds = new Set(records.map((record) => record.externalId));
   const historyItems = [
-    ...records.map((record) => ({
+    ...records.filter((record) => !deletedDraftIds.includes(record.id)).map((record) => ({
       ...record,
       key: `app-${record.id}`,
       href: `/school?reuse=${record.id}`,
@@ -542,6 +544,24 @@ export default function SchoolWorkspace({
     })),
   ].filter((item) => !appliedDate || item.date === appliedDate)
     .sort((a, b) => b.date.localeCompare(a.date) || showTime(b.start).localeCompare(showTime(a.start)));
+
+  function confirmDraftDeletion(id: number, description: string) {
+    setConfirmation({
+      title: "임시 저장한 신청서를 삭제할까요?",
+      description,
+      action: "삭제",
+      destructive: true,
+      run: async () => {
+        try {
+          await call(`/api/school/drafts?id=${id}`, { method: "DELETE" });
+          setDeletedDraftIds((previous) => [...previous, id]);
+          toast.success("임시 저장한 신청서를 삭제했습니다.");
+        } finally {
+          router.refresh();
+        }
+      },
+    });
+  }
 
   function confirmCancellation(booking: Booking) {
     setConfirmation({
@@ -905,6 +925,7 @@ export default function SchoolWorkspace({
                   const [, year, month, day] = /^(\d{4})-(\d{2})-(\d{2})$/.exec(item.date) ?? [];
                   const title = item.eventName || item.roomName || "임시 저장한 예약";
                   const time = `${showTime(item.start)}–${showTime(item.end)}`;
+                  const draftId = item.status === "draft" && "id" in item ? item.id : null;
                   const schoolState = item.school?.state;
                   const label = item.status === "cancelled" ? labels.cancelled
                     : item.school?.stateName || (schoolState && {
@@ -935,7 +956,7 @@ export default function SchoolWorkspace({
                           </span>
                           <Badge variant="secondary" className={`max-w-full whitespace-normal sm:col-start-4 sm:row-start-1 sm:ml-2 sm:max-w-[calc(100%_-_0.5rem)] ${tone ?? ""}`}>{label}</Badge>
                         </span>
-                        <div className="col-start-2 flex flex-wrap gap-2 sm:col-start-5 sm:row-start-1 sm:flex-col sm:items-end">
+                        <div className="col-start-2 flex flex-wrap items-center gap-1 sm:col-start-5 sm:row-start-1 sm:justify-end">
                           {item.href && (
                             <Popover>
                               <PopoverTrigger asChild>
@@ -963,6 +984,16 @@ export default function SchoolWorkspace({
                                 {dateLookupPending && <p role="status" className="px-4 pb-3 type-body-sm">공간 조회 중</p>}
                               </PopoverContent>
                             </Popover>
+                          )}
+                          {draftId !== null && (
+                            <Button
+                              size="icon-sm" variant="ghost" disabled={busy || dateLookupPending}
+                              className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                              aria-label={`${title} 임시 저장 삭제`} title="임시 저장 삭제"
+                              onClick={() => confirmDraftDeletion(draftId, `${title} · ${item.date} · ${time}`)}
+                            >
+                              <Trash2Icon aria-hidden="true" />
+                            </Button>
                           )}
                           {item.school?.cancellable && item.status !== "cancelled" && (
                             <Button size="sm" variant="outline" disabled={busy}
@@ -1357,8 +1388,9 @@ export default function SchoolWorkspace({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>돌아가기</AlertDialogCancel>
+            <AlertDialogCancel>{confirmation?.destructive ? "취소" : "돌아가기"}</AlertDialogCancel>
             <AlertDialogAction
+              variant={confirmation?.destructive ? "destructive" : "default"}
               onClick={() => {
                 const action = confirmation;
                 setConfirmation(null);

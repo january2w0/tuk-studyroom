@@ -246,6 +246,26 @@ async function main() {
     assert.doesNotMatch(await adminDrafts("date=" + day2, admin), new RegExp(saved.eventName));
     assert.match(await adminDrafts("date=2026-02-30", admin), /검색 조건이 올바르지 않습니다/);
     assert.equal((await request("/api/drafts", "POST", {}, student)).status, 404);
+
+    const deletePath = `/api/school/drafts?id=${record.id}`;
+    assert.equal((await request(deletePath, "DELETE")).status, 401);
+    assert.equal((await request(deletePath, "DELETE", undefined, other)).status, 404);
+    assert.equal((await request(deletePath, "DELETE", undefined, student, "https://other.example")).status, 400);
+    assert.equal((await request("/api/school/drafts?id=0", "DELETE", undefined, student)).status, 400);
+    assert.equal((await request(deletePath, "DELETE", undefined, student)).status, 200);
+    assert.equal((await request(deletePath, "DELETE", undefined, student)).status, 404);
+    assert.doesNotMatch(await adminDrafts("date=" + day, admin), new RegExp(saved.eventName));
+
+    const latest = await request("/api/school/drafts?roomCode=" + roomCode, "GET", undefined, student);
+    const linkedId = (await latest.json()).record.id;
+    const [schoolRequest] = await conn.execute<mysql.ResultSetHeader>(
+      "INSERT INTO school_requests(user_id,request_key,fingerprint,status) VALUES (?,?,?,'saved')",
+      [users[0], randomUUID(), randomBytes(32).toString("hex")],
+    );
+    await conn.execute("UPDATE school_booking_records SET request_id=? WHERE id=? AND user_id=?", [schoolRequest.insertId, linkedId, users[0]]);
+    assert.equal((await request(`/api/school/drafts?id=${linkedId}`, "DELETE", undefined, student)).status, 404);
+    const linked = await request("/api/school/drafts?roomCode=" + roomCode, "GET", undefined, student);
+    assert.equal((await linked.json()).record.id, linkedId);
     assert.equal(
       (await request("/api/logout", "POST", {}, student)).status,
       200,
