@@ -58,7 +58,7 @@ export function AppHeader({
 }: {
   name: string;
   role: string;
-  active: "school" | "history" | "schema" | "admin";
+  active: "school" | "history" | "schema" | "about" | "admin";
   connection?: { connected: boolean; autoLogin: boolean };
 }) {
   const router = useRouter();
@@ -71,11 +71,11 @@ export function AppHeader({
     : null;
   return (
     <header className="border-b bg-card/80">
-      <div className="page-container flex h-14 max-w-6xl items-center gap-1.5 sm:gap-16">
+      <div className="page-container flex h-14 max-w-6xl items-center gap-1.5 max-[340px]:gap-1 sm:gap-6 lg:gap-16">
         <Brand />
         <nav
           aria-label="주 메뉴"
-          className="flex h-full items-center gap-2 sm:gap-7"
+          className="flex h-full items-center gap-2 max-[340px]:gap-1 sm:gap-7"
         >
           <Link
             href="/school"
@@ -109,6 +109,17 @@ export function AppHeader({
             )}
           >
             DB 구조
+          </Link>
+          <Link
+            href="/school/about"
+            aria-label="프로젝트 소개"
+            aria-current={active === "about" ? "page" : undefined}
+            className={cn(
+              "focus-control flex h-full items-center border-b-2 border-transparent type-label-md whitespace-nowrap text-muted-foreground hover:text-foreground",
+              active === "about" && "border-primary text-foreground",
+            )}
+          >
+            <span className="hidden sm:inline">프로젝트&nbsp;</span>소개
           </Link>
         </nav>
         <DropdownMenu modal={false}>
