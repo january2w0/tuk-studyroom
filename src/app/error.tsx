@@ -10,7 +10,7 @@ import {
   EmptyDescription,
   EmptyContent,
 } from "@/components/ui/empty";
-export default function ErrorPage({ reset }: { reset: () => void }) {
+export default function ErrorPage({ retry }: { retry: () => void }) {
   return (
     <main className="page-container flex min-h-svh items-center justify-center py-8">
       <Card className="w-full max-w-lg">
@@ -26,7 +26,7 @@ export default function ErrorPage({ reset }: { reset: () => void }) {
               </EmptyDescription>
             </EmptyHeader>
             <EmptyContent>
-              <Button onClick={reset}>
+              <Button onClick={retry}>
                 <RefreshCwIcon data-icon="inline-start" />
                 다시 시도
               </Button>
