@@ -445,8 +445,12 @@ export default function SchoolWorkspace({
     description: string;
     action: string;
     destructive?: boolean;
-    run: () => Promise<void>;
+    run: (() => Promise<void>) | null;
   } | null>(null);
+  function dismissConfirmation() {
+    // Keep the text and button style in place while the dialog animates out.
+    setConfirmation((current) => current?.run ? { ...current, run: null } : current);
+  }
   const requestRef = useRef<{ payload: string; key: string } | null>(null);
   const [bookingOpen, setBookingOpen] = useState(false);
   useEffect(() => {
@@ -1375,12 +1379,12 @@ export default function SchoolWorkspace({
         </SheetContent>
       </Sheet>
       <AlertDialog
-        open={!!confirmation}
+        open={Boolean(confirmation?.run)}
         onOpenChange={(open) => {
-          if (!open) setConfirmation(null);
+          if (!open) dismissConfirmation();
         }}
       >
-        <AlertDialogContent>
+        <AlertDialogContent onBackdropClick={confirmation?.destructive ? dismissConfirmation : undefined}>
           <AlertDialogHeader>
             <AlertDialogTitle>{confirmation?.title}</AlertDialogTitle>
             <AlertDialogDescription className="whitespace-pre-wrap">
@@ -1392,9 +1396,7 @@ export default function SchoolWorkspace({
             <AlertDialogAction
               variant={confirmation?.destructive ? "destructive" : "default"}
               onClick={() => {
-                const action = confirmation;
-                setConfirmation(null);
-                if (action) void run(action.run);
+                if (confirmation?.run) void run(confirmation.run);
               }}
             >
               {confirmation?.action}
