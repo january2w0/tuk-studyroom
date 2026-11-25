@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { redirect } from "next/navigation";
-import { GraduationCapIcon, MapPinIcon, Settings2Icon } from "lucide-react";
+import { ArrowRightIcon, GraduationCapIcon, MapPinIcon, Settings2Icon } from "lucide-react";
 import { AppHeader } from "@/components/app-header";
+import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { currentUser } from "@/lib/auth";
 import { schoolConnectionStatus } from "@/lib/school/connection";
@@ -27,6 +29,13 @@ const features = [
       ["임시 저장 내역 검색", "학생이 임시 저장한 내역을 행사명, 공간명, 이용 날짜로 검색합니다."],
     ],
   },
+];
+
+const specs = [
+  { label: "사용자 화면", value: "React · TypeScript", detail: "Tailwind CSS와 shadcn/ui로 학생과 관리자 화면을 구성했습니다." },
+  { label: "서버 · 학교 연동", value: "Next.js", detail: "학교 통합정보시스템에서 빈 공간을 조회하고 예약 신청과 취소를 처리합니다." },
+  { label: "데이터베이스", value: "MySQL", detail: "공간 설정과 예약 기록을 저장하고, 연락처와 참석자 명단은 암호화해 보관합니다." },
+  { label: "웹 배포", value: "Vercel", detail: "GitHub의 main 브랜치에 변경 사항을 올리면 웹 앱을 자동으로 배포합니다." },
 ];
 
 export default async function AboutPage() {
@@ -77,6 +86,24 @@ export default async function AboutPage() {
             </Card>
           ))}
         </div>
+
+        <Card role="region" aria-labelledby="project-specs" className="gap-0 overflow-hidden py-0 sm:py-0">
+          <div className="flex items-center justify-between gap-3 border-b bg-surface-section px-4 py-3 sm:px-6">
+            <CardTitle id="project-specs" className="type-heading-md">구현 사양</CardTitle>
+            <Button asChild variant="ghost" size="sm" className="-mr-2 text-primary">
+              <Link href="/school/schema">DB 구조 보기 <ArrowRightIcon aria-hidden="true" /></Link>
+            </Button>
+          </div>
+          <dl className="grid gap-px bg-border break-keep sm:grid-cols-2 lg:grid-cols-4">
+            {specs.map(({ label, value, detail }) => (
+              <div key={label} className="bg-card px-4 py-4 sm:px-6 sm:py-5">
+                <dt className="type-label-sm text-muted-foreground">{label}</dt>
+                <dd className="mt-1.5 type-heading-md text-primary">{value}</dd>
+                <dd className="mt-2 type-body-md text-muted-foreground">{detail}</dd>
+              </div>
+            ))}
+          </dl>
+        </Card>
       </main>
     </div>
   );
